@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:magang/helper/contant.dart';
 import 'package:magang/modules/home/list_user_screen.dart';
+import 'package:magang/modules/home/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatelessWidget {
   final String name;
@@ -38,13 +40,19 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            const Center(
-              child: Text(
-                'Selected User Name',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
+            Center(
+              child: Consumer<UserProvider>(
+                builder: (context, value, child) {
+                  return Text(
+                    value.currentUser == null
+                        ? 'Selected User Name Label'
+                        : '${value.currentUser!.firstName} ${value.currentUser!.lastName}',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                },
               ),
             ),
             const Spacer(),

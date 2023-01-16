@@ -70,6 +70,10 @@ class _ListUserScreenState extends State<ListUserScreen> {
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: kDefaultPadding.left, vertical: 16),
                         child: ListTile(
+                          onTap: () {
+                            context.read<UserProvider>().changeCurrentUser(value.users[index]);
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User changed')));
+                          },
                           title: Text('${value.users[index].firstName} ${value.users[index].lastName}'),
                           subtitle: Text(value.users[index].email),
                           leading: CircleAvatar(

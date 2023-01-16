@@ -7,6 +7,7 @@ import 'package:magang/models/user.dart';
 
 class UserProvider extends ChangeNotifier {
   List<User> users = [];
+  User? currentUser;
   int page = 1;
 
   final String endpoint = 'https://reqres.in/api';
@@ -33,5 +34,11 @@ class UserProvider extends ChangeNotifier {
     page++;
     final result = await fetchUsers();
     return result;
+  }
+
+  Future<void> changeCurrentUser(User user) async {
+    currentUser = user;
+
+    notifyListeners();
   }
 }
