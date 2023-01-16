@@ -2,10 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:magang/modules/palindrome/provider/palindrome_provider.dart';
 import 'package:provider/provider.dart';
 
-class PalindromeScreen extends StatelessWidget {
+class PalindromeScreen extends StatefulWidget {
+  const PalindromeScreen({super.key});
+
+  @override
+  State<PalindromeScreen> createState() => _PalindromeScreenState();
+}
+
+class _PalindromeScreenState extends State<PalindromeScreen> {
   final TextEditingController _controller = TextEditingController();
 
-  PalindromeScreen({super.key});
+  @override
+  void initState() {
+    _controller.addListener(() {
+      context.read<PalindromeProvider>().checkIsEmpty(_controller.text);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +56,28 @@ class PalindromeScreen extends StatelessWidget {
                 ),
                 keyboardType: TextInputType.emailAddress,
                 autofocus: true,
-                textInputAction: TextInputAction.go,
-                onFieldSubmitted: (value) {}, // TODO: add node later
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (value) {
+                  if (_controller.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Result'),
+                          content: const Text('Sentence cannot be empty'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Sentence cannot be empty';
@@ -55,49 +88,52 @@ class PalindromeScreen extends StatelessWidget {
               ),
               SizedBox(height: kTabLabelPadding.left),
               ElevatedButton(
-                onPressed: () {
-                  final isPalindrome = context.read<PalindromeProvider>().isPalindrome(_controller.text);
+                onPressed: context.watch<PalindromeProvider>().isEmpty
+                    ? null
+                    : () {
+                        final isPalindrome = context.read<PalindromeProvider>().isPalindrome(_controller.text);
 
-                  if (isPalindrome) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Result'),
-                          content: const Text('isPalindrome'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
+                        if (isPalindrome) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Result'),
+                                content: const Text('isPalindrome'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Result'),
+                                content: const Text('not palindrome'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
                       },
-                    );
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Result'),
-                          content: const Text('not palindrome'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.pink.shade300,
+                  disabledBackgroundColor: Colors.pink.shade300,
+                  backgroundColor: Colors.pink.shade500,
                 ),
                 child: const Text('Check'),
               ),
