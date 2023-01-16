@@ -69,15 +69,22 @@ class _ListUserScreenState extends State<ListUserScreen> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: kDefaultPadding.left, vertical: 16),
-                        child: ListTile(
-                          onTap: () {
-                            context.read<UserProvider>().changeCurrentUser(value.users[index]);
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User changed')));
-                          },
-                          title: Text('${value.users[index].firstName} ${value.users[index].lastName}'),
-                          subtitle: Text(value.users[index].email),
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(value.users[index].avatar),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(width: 0.3, color: Colors.black38),
+                            ),
+                          ),
+                          child: ListTile(
+                            onTap: () {
+                              context.read<UserProvider>().changeCurrentUser(value.users[index]);
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User changed')));
+                            },
+                            title: Text('${value.users[index].firstName} ${value.users[index].lastName}'),
+                            subtitle: Text(value.users[index].email),
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(value.users[index].avatar),
+                            ),
                           ),
                         ),
                       );
