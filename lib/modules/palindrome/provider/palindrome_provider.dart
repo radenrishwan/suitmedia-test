@@ -9,15 +9,13 @@ class PalindromeProvider extends ChangeNotifier {
     return sentence == reversedSentence;
   }
 
-  bool checkIsEmpty(String text) {
-    if (text.isEmpty) {
+  void checkIsEmpty(String name, String sentence) {
+    if (name.isEmpty || sentence.isEmpty || name.isEmpty && sentence.isEmpty) {
       isEmpty = true;
     } else {
       isEmpty = false;
+
+      notifyListeners();
     }
-
-    notifyListeners();
-
-    return isEmpty;
   }
 }
